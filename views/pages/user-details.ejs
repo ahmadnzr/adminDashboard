@@ -1,0 +1,45 @@
+
+
+<div class="d-flex flex-column info">
+    <div class="action align-self-end">
+        <button class="btn btn-sm btn-warning"><i class="ri-edit-box-line"></i>Edit</button>
+        <button class="btn btn-sm btn-danger"><i class="ri-delete-bin-line"></i>Hapus</button>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+    <div class="info-detail user d-flex flex-column align-items-center justify-content-around">
+        <img src="https://avatars.githubusercontent.com/u/41828945?v=4" class="rounded-circle" alt="" height="160"/>
+        <span class="fw-light my-2"><%= user.name %> </span>
+        <div class="socials">
+            <i class="ri-facebook-circle-fill icon-3 mx-1"></i>
+            <i class="ri-github-fill icon-3 mx-1"></i>
+            <i class="ri-facebook-circle-fill icon-3 mx-1"></i>
+        </div>
+    </div>
+    <div class=" info-detail biodata d-flex flex-column justify-content-between">
+        <div class="bio-group d-flex flex-column mb-2">
+            <span class="title fw-light">Name: </span>
+            <strong class="content"><%= user.name %></strong>
+        </div>
+        <div class="bio-group d-flex flex-column mb-2">
+            <span class="title fw-light">Gender: </span>
+            <span class="content"><%= user.gender ? user.gender : '-' %></span>
+        </div>
+        <div class="bio-group d-flex flex-column mb-2">
+            <span class="title fw-light">Address: </span>
+            <span class="content"><%= user.address ? user.address : '-' %></span>
+        </div>
+        <div class="bio-group d-flex flex-column mb-2">
+            <span class="title fw-light">Email: </span>
+            <span class="content"><%= user.email ? user.email : '-' %></span>
+        </div>
+        <div class="bio-group d-flex flex-column mb-2">
+            <span class="title fw-light">Games: </span>
+            <span class="content"><%= user.games ? user.games : '-' %></span>
+        </div>
+        <div class="bio-group d-flex flex-column mb-2">
+            <span class="title fw-light">About: </span>
+            <p class="content"><%= user.about ? user.about : '-' %></p>
+        </div>
+    </div>
+</div>
+</div>

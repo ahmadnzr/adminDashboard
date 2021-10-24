@@ -14,14 +14,9 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link rel="stylesheet" href="css/styles.css" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/css/styles.css" />
     <title><%= title %></title>
     <style>
       * {
@@ -35,25 +30,19 @@
     <%- include ('components/topbar.ejs') %>
 
     <div class="d-flex justify-content-between main">
-      <div class="left-menu">
-        <div class="menu-item flex-column d-flex align-items-center">
-          <i class="fas fa-home icon"></i>
-          <p>Home</p>
-        </div>
-        <div class="menu-item flex-column d-flex align-items-center">
-          <i class="fas fa-users icon"></i>
-          <p>Users</p>
-        </div>
-        <div class="menu-item flex-column d-flex align-items-center">
-          <i class="fas fa-chart-line icon"></i>
-          <p>Statistics</p>
-        </div>
-        <div class="menu-item flex-column d-flex align-items-center">
-          <i class="fas fa-sign-out-alt icon"></i>
-          <p>Log Out</p>
-        </div>
+      <%- include ('components/left-menu.ejs') %>
+
+      <div class="right-menu">
+        <% if (url === "/dashboard") { %>
+          <%- include ('pages/dashboard.ejs')%>
+        <%}else if(url === "/users") { %>
+          <%- include ('pages/users.ejs')%>
+        <%}else if(url === `/users/${id}`) { %>
+          <%- include ('pages/user-details.ejs')%>
+        <% } %> 
+        
       </div>
-      <div class="right-menu">right</div>
+
     </div>
 
     <script
@@ -61,5 +50,20 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <script src="js/statistics.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#example').DataTable();
+      } );
+
+      const dashboard = document.getElementById("dashboard");
+      const linkto = (to) => {
+        window.location = to;
+      };
+    </script>
   </body>
 </html>
