@@ -1,4 +1,5 @@
-<div class="info info-user table-responsive">
+<div class="info info-user table-responsive d-flex flex-column">
+  <button class="btn btn-md btn-primary mb-2 align-self-end" onclick="linkto('/user-add')"><i class="ri-user-add-line"></i> add new user</button>
   <table id="example" class="table table-hover" style="width: 100%">
     <thead>
       <tr>
@@ -15,7 +16,7 @@
         <td><%= item.name %></td>
         <td><%= item.position %></td>
         <td>
-          <a href="/users/<%= item.id %> ">view details</a>
+          <a href="/user-lists/<%= item.id %> ">view details</a>
         </td>
       </tr>
       <% }) %>

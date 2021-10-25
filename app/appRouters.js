@@ -1,14 +1,27 @@
-const { getDashboard, getUsers, getUserDetails } = require("./appController");
+const { addNewUser, updateUser, loginAdmin } = require("./apiController");
+const {
+  getDashboardPage,
+  getUsersPage,
+  getUserDetailsPage,
+  addNewUserPage,
+  updateUserPage,
+  loginPage,
+} = require("./pageControllers");
 
 const router = require("express").Router();
 
-const hai = (req, res, next) => {
-  console.log("hai");
-  next();
-};
+// pages
+router.get('/sign-in', loginPage)
 router.get("/", (req, res) => res.redirect("/dashboard"));
-router.get("/dashboard", getDashboard);
-router.get("/users", getUsers);
-router.get("/users/:id", getUserDetails);
+router.get("/dashboard", getDashboardPage);
+router.get("/user-lists", getUsersPage);
+router.get("/user-lists/:id", getUserDetailsPage);
+router.get("/user-add", addNewUserPage);
+router.get("/user-update/:id", updateUserPage);
+
+// api
+router.post('/login', loginAdmin)
+router.post("/users/", addNewUser);
+router.put("/users/", updateUser);
 
 module.exports = router;
