@@ -20,7 +20,7 @@ const deleteAlert = (id) => {
 };
 
 const deleteUser = async (id) => {
-  return await fetch("https://admin-game-dashboard.herokuapp.com/users/delete/" + id, {
+  return await fetch("http://localhost:3000/users/delete/" + id, {
     method: "delete",
   });
 };
@@ -43,7 +43,7 @@ const logoutAlert = async () => {
 };
 
 const deleteSession = async () => {
-  return await fetch("https://admin-game-dashboard.herokuapp.com/logout/", {
+  return await fetch("http://localhost:3000/logout/", {
     method: "post",
     body: {},
   });
@@ -67,7 +67,7 @@ const deleteBioAlert = async (bioId, userId) => {
 };
 
 const deleteBiodata = async (id) => {
-  return await fetch("https://admin-game-dashboard.herokuapp.com/user/biodata/" + id, {
+  return await fetch("http://localhost:3000/user/biodata/" + id, {
     method: "put",
     body: {},
   });
