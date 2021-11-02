@@ -27,24 +27,13 @@
     </style>
   </head>
   <body>
-    <%- include ('components/topbar.ejs') %>
+    <%- include ('../components/topbar.ejs') %>
 
     <div class="d-flex justify-content-between main">
-      <%- include ('components/left-menu.ejs') %>
+      <%- include ('../components/left-menu.ejs') %>
 
       <div class="right-menu">
-        <% if (url === "/dashboard") { %>
-          <%- include ('pages/dashboard.ejs')%>
-        <%}else if(url === "/user-lists") { %>
-          <%- include ('pages/users.ejs')%>
-        <%}else if(url === `/user-add`) { %>
-          <%- include ('features/add-user.ejs')%>
-        <%}else if(url === `/user-lists/${id}`) { %>
-          <%- include ('pages/user-details.ejs')%>
-        <%}else if(url === `/user-update/${id}`) { %>
-          <%- include ('features/update-user.ejs')%>
-        <% } %> 
-      
+       <%- body %> 
       </div>
 
     </div>
@@ -57,9 +46,8 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="/js/statistics.js"></script>
+    <script src="/js/scripts.js"></script>
     <script>
       $(document).ready(function() {
         $('#example').DataTable();

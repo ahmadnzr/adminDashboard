@@ -5,11 +5,11 @@ const getUserById = (id) => {
   return user;
 };
 
-const loginPage = (req, res) =>{
+const loginPage = (req, res) => {
   res.render("login", {
-    title: "Login Page"
-  })
-}
+    title: "Login Page",
+  });
+};
 
 const getDashboardPage = (req, res) => {
   res.render("app", {

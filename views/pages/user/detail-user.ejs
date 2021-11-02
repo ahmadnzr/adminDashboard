@@ -1,0 +1,53 @@
+<% 
+const {id, username, Biodata, biodataId } = data[0]
+const {fullname, email,age, gender, imgUrl} = Biodata
+const games = '-'
+const about = '-'
+const img = imgUrl || '/img/default-avatar.png'
+%> 
+
+<% if(fullname === null || email === null || gender === null) { %>
+    <%- include('../../components/callout.ejs') %> 
+<% } %> 
+
+<div class="d-flex flex-column info">
+  <div class="action align-self-end">
+    <a class="btn btn-sm btn-warning" href="/users/edit/<%= id %> "><i class="ri-edit-box-line mx-1"></i>Edit</a>
+    <button class="btn btn-sm btn-danger" onclick="deleteAlert('<%= id %>')"><i class="ri-delete-bin-line mx-1"></i>Delete</button>
+    <button class="btn btn-sm btn-danger" onclick="deleteBioAlert('<%= biodataId %>', '<%= id %>')"><i class="ri-delete-bin-line mx-1"></i>Delete Biodata</button>
+    <a class="btn btn-sm btn-secondary text-center" href="/users/view/"><i class="ri-close-line mx-1"></i>Cancel</a>
+  </div>
+  <div class="d-flex justify-content-between align-items-center">
+  <div class="info-detail user d-flex flex-column align-items-center justify-content-around">
+      <img src="<%= img %> " class="rounded-circle" alt="" height="160" width="160"/>
+      <span class="fw-light my-2"><%= username %> </span>
+      <div class="socials">
+          <i class="ri-facebook-circle-fill icon-3 mx-1"></i>
+          <i class="ri-github-fill icon-3 mx-1"></i>
+          <i class="ri-facebook-circle-fill icon-3 mx-1"></i>
+      </div>
+  </div>
+  <div class=" info-detail biodata d-flex flex-column justify-content-between">
+      <div class="bio-group d-flex flex-column mb-2">
+          <span class="title fw-light">Fullname: </span>
+          <strong class="content"><%= fullname || '-' %></strong>
+      </div>
+      <div class="bio-group d-flex flex-column mb-2">
+          <span class="title fw-light">Gender: </span>
+          <span class="content"><%= gender || '-' %></span>
+      </div>
+      <div class="bio-group d-flex flex-column mb-2">
+          <span class="title fw-light">Age: </span>
+          <span class="content"><%= age || '-' %></span>
+      </div>
+      <div class="bio-group d-flex flex-column mb-2">
+          <span class="title fw-light">Email: </span>
+          <span class="content"><%= email || '-' %></span>
+      </div>
+      <div class="bio-group d-flex flex-column mb-2">
+          <span class="title fw-light">Total Games Played: </span>
+          <span class="content"><%= total %></span>
+      </div>
+  </div>
+</div>
+</div>

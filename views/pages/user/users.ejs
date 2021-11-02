@@ -1,0 +1,27 @@
+<div class="info table-responsive d-flex flex-column">
+  <button class="btn btn-md btn-primary mb-2 align-self-end" onclick="linkto('/users/create')"><i class="ri-user-add-line"></i> add new user</button>
+  <table id="example" class="table table-hover" style="width: 100%">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Photo</th>
+        <th>Username</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% let id=0 %> 
+      <% data.map((item) => { id++ %>
+        <% const img = item.Biodata.imgUrl || '/img/default-avatar.png' %> 
+      <tr>
+        <td><%= id %></td>
+        <td><img src="<%= img  %>" alt="" class="rounded-circle" height="60" width="60" /></td>
+        <td class="align-middle"><%= item.username %></td>
+        <td class="align-middle">
+          <a href="/users/view/<%= item.id %> ">view details</a>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

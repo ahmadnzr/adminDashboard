@@ -1,0 +1,61 @@
+<% 
+const {id, username,password, biodataId, Biodata } = data[0]
+const {fullname, email, gender, age, imgUrl} = Biodata
+const games = '-'
+const about = '-'
+const img = imgUrl || '/img/default-avatar.png'
+%> 
+
+<form class="d-flex flex-column info" action="/users/edit/<%= id %>" method="post">
+    <div class="action align-self-end">
+        <button type="submit" class="btn btn-md btn-primary text-center"><i class="ri-user-add-line mx-1"></i>Save</button>
+        <a class="btn btn-md btn-secondary text-center" href="/users/view/<%= id %>"><i class="ri-close-line mx-1"></i>Cancel</a>
+    </div>
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="user d-flex flex-column align-items-center justify-content-around">
+            <img src="<%= img %> " alt="" class="rounded-circle" height="150" width="150">
+            <div class="form-group mb-2">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" value="<%= username %>"required>
+            </div>
+            <div class="form-group mb-2">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" value="<%= password %>" required>
+            </div>
+        </div>
+        <div class="biodata d-flex flex-column justify-content-between">
+            <input type="hidden" class="form-control" id="biodataId" name="biodataId" value="<%= biodataId %>">
+            <div class="form-group mb-2">
+                <label for="fullname">Fullname</label>
+                <input type="text" class="form-control" id="fullname" name="fullname" value="<%= fullname %>">
+            </div>
+            <div class="form-group mb-2">
+                <label for="email">Email</label>
+                <input type="text" class="form-control" id="email" name="email" value="<%= email %>">
+            </div>
+            <div class="form-group mb-2">
+                <label for="imgUrl">Img Url</label>
+                <input type="text" class="form-control" id="imgUrl" name="imgUrl" value="<%= img %>">
+            </div>
+            <div class="form-group mb-2">
+              <label for="age">Age</label>
+              <input type="number" class="form-control" id="age" name="age" value="<%= age %>">
+            </div>
+            <div class="form-group mb-2">
+                <label class="d-block">Gender</label>
+                <div class="form-check form-check-inline me-2">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="male" <%= gender==="male" && 'checked' %>>
+                    <label class="form-check-label" for="male">
+                        Male
+                    </label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="female" <%= gender==="female" && 'checked' %>>
+                    <label class="form-check-label" for="female">
+                        Female
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+  </form>

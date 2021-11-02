@@ -11,7 +11,7 @@ const {
 const router = require("express").Router();
 
 // pages
-router.get('/sign-in', loginPage)
+router.get("/sign-in", loginPage);
 router.get("/", (req, res) => res.redirect("/dashboard"));
 router.get("/dashboard", getDashboardPage);
 router.get("/user-lists", getUsersPage);
@@ -20,7 +20,7 @@ router.get("/user-add", addNewUserPage);
 router.get("/user-update/:id", updateUserPage);
 
 // api
-router.post('/login', loginAdmin)
+router.post("/login", loginAdmin);
 router.post("/users/", addNewUser);
 router.put("/users/", updateUser);
 

@@ -16,11 +16,11 @@ const updateUser = (req, res) => {
   });
 };
 
-const loginAdmin = (req, res) =>{
+const loginAdmin = (req, res) => {
   res.json({
-    ...req.body
-  })
-}
+    ...req.body,
+  });
+};
 module.exports = {
   loginAdmin,
   addNewUser,

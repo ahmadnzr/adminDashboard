@@ -1,33 +1,38 @@
 <div class="top-menu d-flex align-items-center justify-content-around">
-    <div
-      class="
-        info
-        info-dashboard
-        d-flex
-        align-items-center
-        justify-content-around
-      "
-    >
-      <div class="detail-info">
-        <h2>20.000</h2>
-        <span class="fw-bold">Total Users</span>
-      </div>
-      <i class="ri-user-follow-line icon-2"></i>
+  <div
+    class="
+      info
+      info-dashboard
+      d-flex
+      align-items-center
+      justify-content-around
+    "
+  >
+    <div class="detail-info">
+      <h2><%= tUsers %></h2>
+      <span class="fw-bold">Total Users</span>
     </div>
-    <div
-      class="
-        info
-        info-dashboard
-        d-flex
-        align-items-center
-        justify-content-around
-      "
-    >
-      <div class="detail-info">
-        <h2>100.000</h2>
-        <span class="fw-bold">Total Games</span>
-      </div>
-      <i class="ri-gamepad-line icon-2"></i>
-    </div>
+    <i class="ri-user-follow-line icon-2"></i>
   </div>
-  <canvas class="chart" id="myChart" width="200" height="70"></canvas>
+  <div
+    class="
+      info
+      info-dashboard
+      d-flex
+      align-items-center
+      justify-content-around
+    "
+  >
+    <div class="detail-info">
+      <h2><%= tGames %> </h2>
+      <span class="fw-bold">Total Games Played</span>
+    </div>
+    <i class="ri-gamepad-line icon-2"></i>
+  </div>
+</div>
+<canvas class="chart" id="myChart" width="200" height="70"></canvas>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="/js/statistics.js"></script>

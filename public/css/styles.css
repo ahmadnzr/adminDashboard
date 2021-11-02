@@ -52,19 +52,13 @@
 .info {
   box-shadow: 0px 0px 5px -2px #000000;
   padding: 10px;
-  margin: 20px;
+  margin: 10px;
 }
 
 .info-dashboard {
   border-left: 4mm ridge rgba(50, 75, 220, 0.6);
   color: rgb(78, 78, 78);
   flex: 1;
-}
-
-.info-user {
-}
-
-.info-detail {
 }
 
 .user {
@@ -76,6 +70,13 @@
 }
 
 .chart {
-  margin: 20px;
+  margin: 10px;
   box-shadow: 0px 0px 5px -2px #758c66;
+}
+
+.callout {
+  padding: 10px;
+  margin: 20px;
+  border: 1px solid rgba(128, 128, 128, 0.295);
+  border-left: 1mm solid rgba(255, 187, 0, 0.932);
 }
