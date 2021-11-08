@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require("dotenv");
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const sessionAge = 1000 * 60 * 60 * 24;
 
 const expressLayout = require("express-ejs-layouts");

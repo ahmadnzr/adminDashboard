@@ -1,18 +1,27 @@
-# CHALLENGE 06
+## How to contribute ?
 
-## ADMIN DASHBOARD
+- Fork or clone this repo
+- make sure **nodejs and postgresql** are installed on your computer
+- go to project directory and install dependencies
+    ```bash
+    cd adminDashboard && \
+    npm install
 
-| no  | url                                  | body                                                 | ket                                                                                     |
-| --- | ------------------------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
-| 1   | http://localhost:8080/user/login     | `{username,password}`                                | username: **admin** <br> password: **admin**                                            |
-| 2   | http://localhost:8080/dashboard      | `-`                                                  | login required !, total users, total game played                                        |
-| 3   | http://localhost:8080/users/view     | `-`                                                  | list of users                                                                           |
-| 4   | http://localhost:8080/users/create   | `username,password,fullname,email,imgUrl,age,gender` | `username, password` are required!                                                      |
-| 5   | http://localhost:8080/users/view/:id | `id`                                                 | `id` or userId is required!, <br> edit button, delete user, delete biodata user is here |
-| 6   | http://localhost:8080/users/edit/:id | `id`                                                 | `id` or userId is required!                                                             |
+    # or if you have installed yarn, just run 'yarn'
+    ```
+- run app
+    ```bash
+    # for prod
+    yarn start
 
-## REST CLIENT
+    # for development
+    yarn develop
+    ```
+- Open your browser and go to [http://localhost:8080](http://localhost:8080)
 
+- explore as you like 😂
+
+## API documentation
 - Postman Collection: [download](./file-pendukung/challenge-ch06.postman_collection.json)
 
 - Postman Env: [download](./file-pendukung/ch-06-env.postman_environment.json)
