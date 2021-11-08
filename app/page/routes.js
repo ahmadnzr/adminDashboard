@@ -27,10 +27,10 @@ router.get("/users/create", checkLoginUser, getAddUserPage);
 router.get("/users/edit/:id", checkLoginUser, getEditUserPage);
 
 router.post("/login", userLogin);
-router.post("/logout", userLogout);
+router.get("/logout", userLogout);
 router.post("/users/create", userAdd);
-router.delete("/users/delete/:id", deleteUser);
 router.post("/users/edit/:id", editUser);
-router.put("/user/biodata/:id", deleteBiodata);
+router.get("/users/delete/:id", deleteUser);
+router.get("/users/delete/:id/biodata", deleteBiodata);
 
 module.exports = router;

@@ -35,6 +35,7 @@ const userLogin = asyncWrapper(async (req, res) => {
 
 const userLogout = asyncWrapper(async (req, res) => {
   req.session.destroy();
+  res.redirect("/");
 });
 
 const userAdd = asyncWrapper(async (req, res) => {
@@ -54,12 +55,13 @@ const userAdd = asyncWrapper(async (req, res) => {
 
 const deleteUser = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  const user = checkUser(id);
+  const user = await checkUser(id);
 
   await UserGames.destroy({ where: { userId: id } });
-  await User.destroy({ where: { id } });
   await Biodatas.destroy({ where: { id: user[0].biodataId } });
-  return;
+  await User.destroy({ where: { id } });
+
+  res.redirect("/users/view");
 });
 
 const editUser = asyncWrapper(async (req, res) => {
