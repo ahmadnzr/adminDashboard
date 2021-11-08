@@ -89,7 +89,7 @@ const editUser = asyncWrapper(async (req, res) => {
 const deleteBiodata = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   await Biodatas.update(
-    { fullname: null, email: null, age: null, imgUrl: null, gender: null },
+    { fullname: "", email: "", age: 1, imgUrl: "", gender: "" },
     { where: { id } }
   );
   res.redirect("/users/view/" + id);

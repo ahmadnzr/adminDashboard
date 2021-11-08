@@ -6,7 +6,7 @@ const about = '-'
 const img = imgUrl || '/img/default-avatar.png'
 %> 
 
-<% if(fullname === null || email === null || gender === null) { %>
+<% if(fullname === "" || email === "" || gender === "") { %>
     <%- include('../../components/callout.ejs') %> 
 <% } %> 
 
