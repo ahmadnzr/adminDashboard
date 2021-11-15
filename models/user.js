@@ -8,10 +8,9 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      this.belongsTo(models.Biodatas, {
-        foreignKey: "biodataId",
+      this.hasOne(models.Biodatas, {
+        foreignKey: "userId",
         onDelete: "cascade",
-        onUpdate: "cascade",
       });
       this.belongsToMany(models.Game, {
         through: "UserGames",
@@ -23,9 +22,7 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       username: DataTypes.STRING,
-      password: DataTypes.STRING,
-      isAdmin: DataTypes.BOOLEAN,
-      biodataId: DataTypes.INTEGER,
+      encryptedPassword: DataTypes.STRING,
     },
     {
       sequelize,

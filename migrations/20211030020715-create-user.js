@@ -12,24 +12,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      password: {
+      encryptedPassword: {
         allowNull: false,
         type: Sequelize.STRING,
-      },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-      biodataId: {
-        allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: "Biodatas",
-          },
-          key: "id",
-        },
-        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

@@ -4,9 +4,16 @@ const { success, fail, response } = require("../../middleware/responseBuilder");
 
 const checkBiodata = async (id) => {
   const n = Number(id);
-  if (isNaN(n)) return [];
-  const biodata = await Biodatas.findAll({ where: { id: n } });
-  return biodata;
+  if (isNaN(n)) return null;
+
+  return await Biodatas.findByPk(n);
+};
+
+const findUser = async (id) => {
+  const n = Number(id);
+  if (isNaN(n)) return null;
+
+  return await User.findByPk(n);
 };
 
 const getBiodata = asyncWrapper(async (req, res) => {
@@ -27,12 +34,35 @@ const getBiodataByUserId = asyncWrapper(async (req, res) => {
 });
 
 const createBiodata = asyncWrapper(async (req, res) => {
-  const { username, password, fullname, email, age, gender, imgUrl } = req.body;
+  const { fullname, email, age, gender, imgUrl, userId } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json(fail("username and password are required!"));
-  }
+  if (!userId) return res.status(400).json(fail("userId is required!"));
+
+  const user = await findUser(userId);
+  if (!user)
+    return res.status(404).json(fail(`User with id '${userId}' is not found!`));
+
   const biodata = await Biodatas.create({
+    fullname,
+    email,
+    age,
+    gender,
+    imgUrl,
+    userId,
+  });
+
+  return res.status(200).json(success(biodata));
+});
+
+const updateBiodata = asyncWrapper(async (req, res) => {
+  const { id } = req.params;
+  const { fullname, email, age, gender, imgUrl } = req.body;
+
+  const biodata = await checkBiodata(id);
+  if (!biodata)
+    return res.status(404).json(fail(`Biodata with id '${id}' is not found!`));
+
+  await biodata.update({
     fullname,
     email,
     age,
@@ -40,58 +70,23 @@ const createBiodata = asyncWrapper(async (req, res) => {
     imgUrl,
   });
 
-  const createUser = await User.create({
-    username,
-    password,
-    biodataId: biodata.id,
-  });
-  const user = await User.findAll({
-    attributes: ["id", "username", "password"],
-    where: { id: createUser.id },
-    include: { model: Biodatas },
-  });
-  return res.status(200).json(success(user));
-});
-
-const updateBiodata = asyncWrapper(async (req, res) => {
-  const { id } = req.params;
-  const { fullname, email, age, gender, imgUrl } = req.body;
-  const cBiodata = await checkBiodata(id);
-  if (cBiodata.length < 1)
-    return res.status(404).json(fail(`Biodata with id '${id}' is not found!`));
-
-  await Biodatas.update(
-    {
-      fullname,
-      email,
-      age,
-      gender,
-      imgUrl,
-    },
-    { where: { id } }
-  );
-
-  const biodata = await Biodatas.findAll({ where: { id } });
-
   return res.status(200).json(success(biodata));
 });
 
 const deleteBiodata = asyncWrapper(async (req, res) => {
   const { id } = req.params;
-  const cBiodata = await checkBiodata(id);
-  if (cBiodata.length < 1)
+
+  const biodata = await checkBiodata(id);
+  if (!biodata)
     return res.status(404).json(fail(`Biodata with id '${id}' is not found!`));
 
-  await Biodatas.update(
-    {
-      fullname: null,
-      email: null,
-      age: null,
-      gender: null,
-      imgUrl: null,
-    },
-    { where: { id } }
-  );
+  await biodata.update({
+    fullname: null,
+    email: null,
+    age: null,
+    gender: null,
+    imgUrl: null,
+  });
 
   return res
     .status(200)
