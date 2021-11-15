@@ -8,8 +8,8 @@ const {
   GUNTING,
 } = require("./constants");
 
-const { success, fail, response } = require("../middleware/responseBuilder");
-const asyncWrapper = require("../middleware/asyncWrapper");
+const { success, fail, response } = require("../../middleware/responseBuilder");
+const asyncWrapper = require("../../middleware/asyncWrapper");
 
 const checkUser = async (id) => {
   const n = Number(id);

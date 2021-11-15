@@ -1,5 +1,5 @@
 const { User, Biodatas, UserGames } = require("../../models");
-const asyncWrapper = require("../middleware/asyncWrapper");
+const asyncWrapper = require("../../middleware/asyncWrapper");
 
 const checkUser = async (id) => {
   const n = Number(id);

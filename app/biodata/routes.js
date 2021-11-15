@@ -2,7 +2,6 @@ const {
   getBiodata,
   updateBiodata,
   deleteBiodata,
-  getBiodataById,
   getBiodataByUserId,
   createBiodata,
 } = require("./controllers");

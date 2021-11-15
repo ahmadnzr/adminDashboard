@@ -1,6 +1,6 @@
 const { Game, UserGames } = require("../../models");
-const asyncWrapper = require("../middleware/asyncWrapper");
-const { success, fail, response } = require("../middleware/responseBuilder");
+const asyncWrapper = require("../../middleware/asyncWrapper");
+const { success, fail, response } = require("../../middleware/responseBuilder");
 
 const checkGame = async (id) => {
   const n = Number(id);

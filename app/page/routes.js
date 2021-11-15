@@ -1,4 +1,4 @@
-const checkLoginUser = require("../middleware/checkLoginUser");
+const checkLoginUser = require("../../middleware/checkLoginUser");
 const {
   userLogin,
   userLogout,

@@ -1,5 +1,5 @@
 const { User, Biodatas, UserGames } = require("../../models");
-const asyncWrapper = require("../middleware/asyncWrapper");
+const asyncWrapper = require("../../middleware/asyncWrapper");
 
 const getAllUser = async () => {
   const users = await User.findAll({

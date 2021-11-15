@@ -1,6 +1,6 @@
 const { User, Biodatas } = require("../../models");
-const asyncWrapper = require("../middleware/asyncWrapper");
-const { success, fail, response } = require("../middleware/responseBuilder");
+const asyncWrapper = require("../../middleware/asyncWrapper");
+const { success, fail, response } = require("../../middleware/responseBuilder");
 
 const checkBiodata = async (id) => {
   const n = Number(id);

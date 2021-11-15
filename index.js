@@ -16,8 +16,8 @@ const gameRoutes = require("./app/game/routes");
 const userGamesRoutes = require("./app/userGames/routes");
 const biodataRoutes = require("./app/biodata/routes");
 
-const notFound = require("./app/middleware/notFound");
-const serverError = require("./app/middleware/serverError");
+const notFound = require("./middleware/notFound");
+const serverError = require("./middleware/serverError");
 
 // setup
 app.use(expressLayout);
