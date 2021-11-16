@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasOne(models.Biodatas, {
+        as: "biodata",
         foreignKey: "userId",
         onDelete: "cascade",
       });
