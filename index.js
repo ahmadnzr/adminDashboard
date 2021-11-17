@@ -16,8 +16,8 @@ const gameRoutes = require("./app/game/routes");
 const userGamesRoutes = require("./app/userGames/routes");
 const biodataRoutes = require("./app/biodata/biodata.routes");
 
-const notFound = require("./middleware/notFound");
-const serverError = require("./middleware/serverError");
+const { pageNotFound } = require("./middleware/pageNotFound");
+const { serverError } = require("./middleware/serverError");
 
 // setup
 app.use(expressLayout);
@@ -42,7 +42,7 @@ app.use("/api/v1", userGamesRoutes);
 app.use("/api/v1", biodataRoutes);
 
 // middleware
-app.use(notFound);
+app.use(pageNotFound);
 app.use(serverError);
 
 app.listen(PORT, () => {

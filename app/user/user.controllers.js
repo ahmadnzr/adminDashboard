@@ -1,7 +1,7 @@
 const { User, Biodatas, UserGames } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 const UserView = require("./user.views");
-const { notFound } = require("../../middleware/responseBuilder");
+const { notFound } = require("../../utils/responseBuilder");
 
 const checkUser = async (id) => {
   const n = Number(id);

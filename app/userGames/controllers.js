@@ -8,7 +8,7 @@ const {
   GUNTING,
 } = require("./constants");
 
-const { success, fail, response } = require("../../middleware/responseBuilder");
+const { success, fail, response } = require("../../utils/responseBuilder");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 
 const checkUser = async (id) => {

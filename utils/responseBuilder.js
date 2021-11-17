@@ -14,4 +14,11 @@ module.exports = {
       documentation_url: url,
     };
   },
+
+  fieldRequired(msg) {
+    return {
+      name: "REQUIRED_FIELD",
+      message: msg,
+    };
+  },
 };
