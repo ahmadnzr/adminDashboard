@@ -3,15 +3,13 @@ const {
   updateBiodata,
   deleteBiodata,
   getBiodataByUserId,
-  createBiodata,
-} = require("./controllers");
+} = require("./biodata.controllers");
 
 const router = require("express").Router();
 
 router.get("/biodatas", getBiodata);
-router.post("/biodatas", createBiodata);
 router.get("/users/:userId/biodata", getBiodataByUserId);
-router.put("/biodatas/:id", updateBiodata);
-router.delete("/biodatas/:id", deleteBiodata);
+router.put("/users/:userId/biodata", updateBiodata);
+router.delete("/users/:userId/biodata", deleteBiodata);
 
 module.exports = router;
