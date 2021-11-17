@@ -1,6 +1,7 @@
 const { User, Biodatas } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 const { notFound } = require("../../middleware/responseBuilder");
+const BiodataViews = require("./biodata.views");
 
 const findBiodata = async (id) => {
   const n = Number(id);
@@ -10,9 +11,13 @@ const findBiodata = async (id) => {
 };
 
 const getBiodata = asyncWrapper(async (req, res) => {
-  const biodata = await Biodatas.findAll({ order: [["updatedAt", "DESC"]] });
+  const biodatas = await Biodatas.findAll({ order: [["updatedAt", "DESC"]] });
 
-  return res.status(200).json(biodata);
+  const response = biodatas.map((bio) => {
+    return new BiodataViews(bio);
+  });
+
+  return res.status(200).json(response);
 });
 
 const getBiodataByUserId = asyncWrapper(async (req, res) => {
@@ -26,7 +31,9 @@ const getBiodataByUserId = asyncWrapper(async (req, res) => {
       .json(notFound(`user id '${id}' undefined`, "/users"));
   }
 
-  return res.status(200).json(biodata);
+  const response = new BiodataViews(biodata);
+
+  return res.status(200).json(response);
 });
 
 const updateBiodata = asyncWrapper(async (req, res) => {
@@ -49,8 +56,9 @@ const updateBiodata = asyncWrapper(async (req, res) => {
     gender,
     imgUrl,
   });
+  const response = new BiodataViews(biodata);
 
-  return res.status(200).json(biodata);
+  return res.status(200).json(response);
 });
 
 const deleteBiodata = asyncWrapper(async (req, res) => {
@@ -71,8 +79,9 @@ const deleteBiodata = asyncWrapper(async (req, res) => {
     gender: null,
     imgUrl: null,
   });
+  const response = new BiodataViews(biodata);
 
-  return res.status(200).json(biodata);
+  return res.status(200).json(response);
 });
 
 module.exports = {
