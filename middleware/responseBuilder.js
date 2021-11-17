@@ -1,31 +1,17 @@
-const success = (data = []) => ({
-  status: "OK",
-  total: data.length,
-  data,
-});
-
-const response = (msg) => ({
-  status: "OK",
-  message: msg,
-});
-
-const fail = (msg) => ({
-  status: "FAIL",
-  message: msg,
-});
-
-const error = (err) => ({
-  status: "ERROR",
-  data: {
-    name: err.name,
-    message: err.message,
-    stack: err.stack,
-  },
-});
-
 module.exports = {
-  success,
-  fail,
-  error,
-  response,
+  error(err) {
+    return {
+      name: err.name,
+      message: err.message,
+      stack: err.stack,
+    };
+  },
+
+  notFound(msg, url) {
+    return {
+      name: "NOT_FOUND",
+      message: msg,
+      documentation_url: url,
+    };
+  },
 };

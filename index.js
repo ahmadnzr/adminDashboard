@@ -11,10 +11,10 @@ const session = require("express-session");
 
 const path = require("path");
 const pageRoutes = require("./app/page/routes");
-const userRoutes = require("./app/user/routes");
+const userRoutes = require("./app/user/user.routes");
 const gameRoutes = require("./app/game/routes");
 const userGamesRoutes = require("./app/userGames/routes");
-const biodataRoutes = require("./app/biodata/routes");
+const biodataRoutes = require("./app/biodata/biodata.routes");
 
 const notFound = require("./middleware/notFound");
 const serverError = require("./middleware/serverError");
