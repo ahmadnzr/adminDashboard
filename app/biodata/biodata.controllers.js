@@ -1,6 +1,6 @@
 const { User, Biodatas } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
-const { notFound } = require("../../middleware/responseBuilder");
+const { notFound } = require("../../utils/responseBuilder");
 const BiodataViews = require("./biodata.views");
 
 const findBiodata = async (id) => {
