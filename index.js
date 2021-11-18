@@ -12,8 +12,6 @@ const session = require("express-session");
 const path = require("path");
 const pageRoutes = require("./app/page/routes");
 const userRoutes = require("./app/user/user.routes");
-const gameRoutes = require("./app/game/routes");
-const userGamesRoutes = require("./app/userGames/routes");
 const biodataRoutes = require("./app/biodata/biodata.routes");
 
 const { pageNotFound } = require("./middleware/pageNotFound");
@@ -37,8 +35,6 @@ app.use(express.static(path.join(__dirname, "public")));
 //router
 app.use(pageRoutes);
 app.use("/api/v1", userRoutes);
-app.use("/api/v1", gameRoutes);
-app.use("/api/v1", userGamesRoutes);
 app.use("/api/v1", biodataRoutes);
 
 // middleware
