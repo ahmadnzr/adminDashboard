@@ -2,7 +2,7 @@
   "development": {
     "username": "ahmad",
     "password": "root",
-    "database": "challenge_ch06_development",
+    "database": "rock_paper_scissor_game",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
