@@ -13,14 +13,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         onDelete: "cascade",
       });
-
-      this.belongsToMany(models.Role, { through: "userRoles" });
     }
   }
   User.init(
     {
       username: DataTypes.STRING,
       encryptedPassword: DataTypes.STRING,
+      role: DataTypes.STRING,
     },
     {
       sequelize,

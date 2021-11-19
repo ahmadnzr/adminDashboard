@@ -15,6 +15,7 @@ module.exports = {
       {
         username: "narutokun",
         encryptedPassword: "test",
+        role: "SuperAdmin",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
