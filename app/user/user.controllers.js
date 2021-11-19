@@ -1,7 +1,8 @@
 const { User, Biodatas } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 const UserView = require("./user.views");
-const { notFound } = require("../../utils/responseBuilder");
+const { notFound, fieldRequired } = require("../../utils/responseBuilder");
+const bcrypt = require("bcrypt");
 
 const checkUser = async (id) => {
   const n = Number(id);
@@ -18,13 +19,13 @@ const checkRole = async ({ role = "PlayerUser" }) => {
 };
 
 const createUser = async ({ username, password, role = "PlayerUser" }) => {
-  return await User.create({ username, encryptedPassword: password, role });
+  const encryptedPassword = bcrypt.hashSync(password, 10);
+  return await User.create({ username, encryptedPassword, role });
 };
 
 const updateUser = async (user, body) => {
-  const { username, password, role, fullname, email, age, gender, imgUrl } =
-    body;
-  await user.update({ username, encryptedPassword: password, role });
+  const { username, role, fullname, email, age, gender, imgUrl } = body;
+  await user.update({ username, role });
 
   await Biodatas.update(
     { fullname, email, age, gender, imgUrl },
@@ -73,7 +74,9 @@ const getUserById = asyncWrapper(async (req, res) => {
 
 const create = asyncWrapper(async (req, res) => {
   if (!req.body.username || !req.body.password)
-    return res.status(400).json(fieldRequired("name is required"));
+    return res
+      .status(400)
+      .json(fieldRequired("username and pasword are required!"));
 
   const cRole = await checkRole(req.body);
   if (!cRole) {

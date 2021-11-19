@@ -21,4 +21,11 @@ module.exports = {
       message: msg,
     };
   },
+
+  credentialError(msg) {
+    return {
+      name: "CREDENTIAL_ERROR",
+      message: msg,
+    };
+  },
 };
