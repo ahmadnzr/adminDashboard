@@ -1,4 +1,4 @@
-const { User, Biodatas, UserGames } = require("../../models");
+const { User, Biodatas } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 const UserView = require("./user.views");
 const { notFound } = require("../../utils/responseBuilder");
@@ -9,13 +9,44 @@ const checkUser = async (id) => {
 
   return await User.findOne({
     where: { id: n },
-    include: { model: Biodatas, as: "biodata" },
+    include: [{ model: Biodatas, as: "biodata" }],
+  });
+};
+
+const checkRole = async ({ role = "PlayerUser" }) => {
+  return ["SuperAdmin", "PlayerUser"].includes(role);
+};
+
+const createUser = async ({ username, password, role = "PlayerUser" }) => {
+  return await User.create({ username, encryptedPassword: password, role });
+};
+
+const updateUser = async (user, body) => {
+  const { username, password, role, fullname, email, age, gender, imgUrl } =
+    body;
+  await user.update({ username, encryptedPassword: password, role });
+
+  await Biodatas.update(
+    { fullname, email, age, gender, imgUrl },
+    { where: { userId: user.id } }
+  );
+};
+
+const addUserBiodata = async (userId, body) => {
+  const { fullname, email, age, gender, imgUrl } = body;
+  return await Biodatas.create({
+    fullname,
+    email,
+    age,
+    gender,
+    imgUrl,
+    userId,
   });
 };
 
 const getUser = asyncWrapper(async (req, res) => {
   const users = await User.findAll({
-    include: { model: Biodatas, as: "biodata" },
+    include: [{ model: Biodatas, as: "biodata" }],
   });
 
   const response = users.map((user) => {
@@ -40,42 +71,58 @@ const getUserById = asyncWrapper(async (req, res) => {
   return res.status(200).json(response);
 });
 
-const addUser = asyncWrapper(async (req, res) => {
-  const { username, password } = req.body;
+const create = asyncWrapper(async (req, res) => {
+  if (!req.body.username || !req.body.password)
+    return res.status(400).json(fieldRequired("name is required"));
 
-  const user = await User.create({
-    username,
-    encryptedPassword: password,
-  });
+  const cRole = await checkRole(req.body);
+  if (!cRole) {
+    return res
+      .status(400)
+      .json(
+        notFound(`Role ${req.body.role} is undefined`, [
+          "SuperAdmin",
+          "PlayerUser",
+        ])
+      );
+  }
 
-  const biodata = await Biodatas.create({ userId: user.id });
+  const user = await createUser(req.body);
+  await addUserBiodata(user.id, req.body);
 
-  user.biodata = biodata;
-
-  const response = new UserView(user);
+  const response = new UserView(await checkUser(user.id));
 
   return res.status(201).json(response);
 });
 
-const updateUser = asyncWrapper(async (req, res) => {
+const update = asyncWrapper(async (req, res) => {
   const { id } = req.params;
 
-  const user = await checkUser(id);
+  if (!req.body.username || !req.body.password)
+    return res.status(400).json(fieldRequired("name is required"));
 
+  const cRole = await checkRole(req.body);
+  if (!cRole) {
+    return res
+      .status(400)
+      .json(
+        notFound(`Role ${req.body.role} is undefined`, [
+          "SuperAdmin",
+          "PlayerUser",
+        ])
+      );
+  }
+
+  const user = await checkUser(id);
   if (!user) {
     return res
       .status(404)
       .json(notFound(`user id '${id}' undefined`, "/users"));
   }
 
-  const { username, password } = req.body;
+  await updateUser(user, req.body);
 
-  await user.update({
-    username,
-    encryptedPassword: password,
-  });
-
-  const response = new UserView(user);
+  const response = new UserView(await checkUser(id));
 
   return res.status(200).json(response);
 });
@@ -90,6 +137,7 @@ const deleteUser = asyncWrapper(async (req, res) => {
       .json(notFound(`user id '${id}' undefined`, "/users"));
   }
 
+  await Biodatas.destroy({ where: { userId: user.id } });
   await user.destroy();
 
   return res.status(200).json({});
@@ -98,7 +146,7 @@ const deleteUser = asyncWrapper(async (req, res) => {
 module.exports = {
   getUser,
   getUserById,
-  addUser,
-  updateUser,
+  create,
+  update,
   deleteUser,
 };

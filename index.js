@@ -13,10 +13,10 @@ const path = require("path");
 const pageRoutes = require("./app/page/routes");
 const userRoutes = require("./app/user/user.routes");
 const biodataRoutes = require("./app/biodata/biodata.routes");
-const roleRoutes = require("./app/role/role.routes");
 
 const { pageNotFound } = require("./middleware/pageNotFound");
 const { serverError } = require("./middleware/serverError");
+const models = require("./models");
 
 // setup
 app.use(expressLayout);
@@ -37,13 +37,20 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(pageRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", biodataRoutes);
-app.use("/api/v1", roleRoutes);
 
 // middleware
 app.use(pageNotFound);
 app.use(serverError);
 
-app.listen(PORT, () => {
-  console.clear();
-  console.log(`server is running on http://localhost:${PORT}`);
-});
+models.sequelize
+  .sync()
+  .then((result) => {
+    console.log(result);
+    app.listen(PORT, () => {
+      console.clear();
+      console.log(`server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });

@@ -1,8 +1,9 @@
 class UserView {
-  constructor({ id, username, biodata, createdAt, updatedAt }) {
+  constructor({ id, username, biodata, role, createdAt, updatedAt }) {
     this.id = id;
     this.username = username;
     this.biodata = biodata;
+    this.role = role;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -11,6 +12,7 @@ class UserView {
     return {
       id: this.id,
       username: this.username,
+      role: this.role,
       biodata: {
         fullname: this.biodata.fullname,
         email: this.biodata.email,
