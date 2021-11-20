@@ -14,6 +14,7 @@ const pageRoutes = require("./app/page/routes");
 const userRoutes = require("./app/user/user.routes");
 const biodataRoutes = require("./app/biodata/biodata.routes");
 const roomRoutes = require("./app/room/room.routes");
+const gameFightRoutes = require("./app/game/game.routes");
 
 const { pageNotFound } = require("./middleware/pageNotFound");
 const { serverError } = require("./middleware/serverError");
@@ -39,6 +40,7 @@ app.use(pageRoutes);
 app.use("/api/v1", userRoutes);
 app.use("/api/v1", biodataRoutes);
 app.use("/api/v1", roomRoutes);
+app.use("/api/v1", gameFightRoutes);
 
 // middleware
 app.use(pageNotFound);
@@ -46,8 +48,7 @@ app.use(serverError);
 
 models.sequelize
   .sync()
-  .then((result) => {
-    console.log(result);
+  .then(() => {
     app.listen(PORT, () => {
       console.clear();
       console.log(`server is running on http://localhost:${PORT}`);
