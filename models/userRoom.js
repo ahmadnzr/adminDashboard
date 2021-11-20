@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {}
   }
+  
   UserRoom.init(
     {
       playerType: {
@@ -16,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "Player 1",
       },
+      isWinner: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      }
     },
     {
       sequelize,

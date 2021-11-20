@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       max: DataTypes.INTEGER,
-      status: DataTypes.STRING,
+      isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
     },
     {
       sequelize,

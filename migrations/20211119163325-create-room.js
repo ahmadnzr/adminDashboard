@@ -14,8 +14,8 @@ module.exports = {
       max: {
         type: Sequelize.INTEGER,
       },
-      status: {
-        type: Sequelize.STRING,
+      isActive: {
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         allowNull: false,
