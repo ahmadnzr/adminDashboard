@@ -15,7 +15,7 @@ class RoomView {
         player: player.id,
         username: player.username,
         type: player.UserRooms.playerType,
-        is_winner: player.UserRooms.isWinner
+        is_winner: player.UserRooms.isWinner,
       };
     });
   }

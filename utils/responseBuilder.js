@@ -35,4 +35,11 @@ module.exports = {
       message: msg,
     };
   },
+
+  gameError(name, msg) {
+    return {
+      name: name,
+      message: msg,
+    };
+  },
 };

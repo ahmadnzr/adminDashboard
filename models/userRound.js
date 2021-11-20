@@ -9,13 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {}
   }
-  
+
   UserRound.init(
     {
       playerChoice: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
     },
     {
       sequelize,

@@ -11,6 +11,8 @@ const ROUND_ONE = "ROUND_ONE";
 const ROUND_TWO = "ROUND_TWO";
 const ROUND_TREE = "ROUND_TREE";
 
+const WAITING_PLAYER_TWO = "WAITING_PLAYER_TWO";
+
 module.exports = {
   GUNTING,
   BATU,
@@ -21,4 +23,5 @@ module.exports = {
   ROUND_ONE,
   ROUND_TWO,
   ROUND_TREE,
+  WAITING_PLAYER_TWO,
 };
