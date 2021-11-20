@@ -12,6 +12,7 @@ const createToken = ({ id, username, role }) => {
 };
 const checkUser = async ({ username = "", password = "" }) => {
   const user = await User.findOne({ where: { username } });
+  if(!user) return false
   const checkPassword = await decryptPassword(password, user.encryptedPassword);
 
   return !checkPassword ? false : user;
