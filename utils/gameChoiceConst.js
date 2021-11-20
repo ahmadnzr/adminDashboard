@@ -1,0 +1,24 @@
+const GUNTING = "GUNTING";
+const BATU = "BATU";
+const KERTAS = "KERTAS";
+
+const PLAYER_CHOICE_LIST = [GUNTING, BATU, KERTAS];
+
+const PLAYER_ONE = "PLAYER_ONE";
+const PLAYER_TWO = "PLAYER_TWO";
+
+const ROUND_ONE = "ROUND_ONE";
+const ROUND_TWO = "ROUND_TWO";
+const ROUND_TREE = "ROUND_TREE";
+
+module.exports = {
+  GUNTING,
+  BATU,
+  KERTAS,
+  PLAYER_ONE,
+  PLAYER_TWO,
+  PLAYER_CHOICE_LIST,
+  ROUND_ONE,
+  ROUND_TWO,
+  ROUND_TREE,
+};
