@@ -28,4 +28,11 @@ module.exports = {
       message: msg,
     };
   },
+
+  unauthorized(msg) {
+    return {
+      name: "UNAUTHORIZED",
+      message: msg,
+    };
+  },
 };
