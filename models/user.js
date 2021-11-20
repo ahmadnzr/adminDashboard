@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
       });
 
-      this.belongsToMany(models.Round, {through: 'UserRounds', foreignKey: 'userId'})
+      this.belongsToMany(models.Round, {
+        through: "UserRounds",
+        foreignKey: "userId",
+      });
     }
   }
   User.init(
