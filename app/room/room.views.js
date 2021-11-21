@@ -12,7 +12,7 @@ class RoomView {
   #mapPlayer(players) {
     return players.map((player) => {
       return {
-        player: player.id,
+        id: player.id,
         username: player.username,
         type: player.UserRooms.playerType,
         is_winner: player.UserRooms.isWinner,
