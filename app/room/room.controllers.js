@@ -11,7 +11,7 @@ const {
   PLAYER_TWO,
   ROUND_ONE,
   ROUND_TWO,
-  ROUND_TREE,
+  ROUND_THREE,
 } = require("../../utils/gameChoiceConst");
 
 const ALREADY_USER = "ALREADY_USER";
@@ -32,7 +32,7 @@ const findRoom = async (id) => {
 const createRound = async (room, user) => {
   const round1 = await Round.create({ name: ROUND_ONE });
   const round2 = await Round.create({ name: ROUND_TWO });
-  const round3 = await Round.create({ name: ROUND_TREE });
+  const round3 = await Round.create({ name: ROUND_THREE });
 
   await round1.addUser(user, { through: { playerChoice: "" } });
   await round2.addUser(user, { through: { playerChoice: "" } });
