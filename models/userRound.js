@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       playerChoice: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

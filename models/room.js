@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         through: "UserRooms",
         foreignKey: "roomId",
       });
+
+      this.hasMany(models.Round, { foreignKey: "roomId" });
     }
   }
   Room.init(
