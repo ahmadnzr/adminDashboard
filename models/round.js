@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
         through: "UserRounds",
         foreignKey: "roundId",
       });
+
+      this.belongsTo(models.Room, { foreignKey: "roomId" });
     }
   }
   Round.init(

@@ -1,4 +1,4 @@
-const { User, Room } = require("../../models");
+const { User, Room, Round, UserRound } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 const {
   fieldRequired,
@@ -6,7 +6,13 @@ const {
   notFound,
 } = require("../../utils/responseBuilder");
 const RoomView = require("./room.views");
-const { PLAYER_ONE, PLAYER_TWO } = require("../../utils/gameChoiceConst");
+const {
+  PLAYER_ONE,
+  PLAYER_TWO,
+  ROUND_ONE,
+  ROUND_TWO,
+  ROUND_TREE,
+} = require("../../utils/gameChoiceConst");
 
 const ALREADY_USER = "ALREADY_USER";
 const FULL_ROOM = "FULL_ROOM";
@@ -17,7 +23,30 @@ const findUser = async (id) => {
 };
 
 const findRoom = async (id) => {
-  return await Room.findOne({ where: { id }, include: User });
+  return await Room.findOne({
+    where: { id },
+    include: [{ model: User }, { model: Round }],
+  });
+};
+
+const createRound = async (room, user) => {
+  const round1 = await Round.create({ name: ROUND_ONE });
+  const round2 = await Round.create({ name: ROUND_TWO });
+  const round3 = await Round.create({ name: ROUND_TREE });
+
+  await round1.addUser(user, { through: { playerChoice: "" } });
+  await round2.addUser(user, { through: { playerChoice: "" } });
+  await round3.addUser(user, { through: { playerChoice: "" } });
+
+  await room.addRound(round1);
+  await room.addRound(round2);
+  await room.addRound(round3);
+
+  return;
+};
+
+const addUserToRound = async (round, user) => {
+  await round.addUser(user, { through: { playerChoice: "" } });
 };
 
 const createRoom = async (body, userId) => {
@@ -26,6 +55,7 @@ const createRoom = async (body, userId) => {
 
   const room = await Room.create({ name, max: 2, status: "Active" });
   await room.addUser(user, { through: { playerType: PLAYER_ONE } });
+  await createRound(room, user);
   return room;
 };
 
@@ -84,19 +114,21 @@ const join = asyncWrapper(async (req, res) => {
       .json(gameError(FULL_ROOM, "can't join, room is full !"));
   }
 
+  room.Rounds.map(async (round) => {
+    return await addUserToRound(round, player);
+  });
+
   const response = new RoomView(await findRoom(room.id));
 
   return res.status(200).json(response);
 });
 
 const getAll = asyncWrapper(async (req, res) => {
-  const rooms = await Room.findAll({ include: User });
-
-  const response = rooms.map((room) => {
-    return new RoomView(room);
+  const rooms = await Room.findAll({
+    include: [{ model: Round, include: User }],
   });
 
-  return res.status(200).json(response);
+  return res.status(200).json(rooms);
 });
 
 module.exports = { create, getAll, join };
