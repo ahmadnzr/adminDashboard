@@ -7,7 +7,7 @@ const AuthView = require("./auth.views");
 
 const createToken = ({ id, username, role }) => {
   return jwt.sign({ id, username, role }, process.env.JWT_SIGNATURE_KEY, {
-    expiresIn: "1h",
+    expiresIn: "3h",
   });
 };
 const checkUser = async ({ username = "", password = "" }) => {
