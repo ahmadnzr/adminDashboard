@@ -7,8 +7,6 @@ class GameView {
     max,
     winner,
     isActive,
-    playerOnePoint,
-    playerTwoPoint,
     createdAt,
     updatedAt,
     Users,
@@ -18,8 +16,6 @@ class GameView {
     this.name = name;
     this.max = max;
     this.winner = winner;
-    this.playerOnePoint = playerOnePoint;
-    this.playerTwoPoint = playerTwoPoint;
     this.isActive = isActive;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -34,6 +30,7 @@ class GameView {
         username: user.username,
         type: user.UserRooms.playerType,
         is_winner: user.UserRooms.isWinner,
+        player_score: user.UserRooms.playerPoint,
       };
     });
   }
@@ -55,8 +52,6 @@ class GameView {
       return {
         name: round.name,
         winner: round.winner,
-        player_one_point: round.playerOnePoint,
-        player_two_point: round.playerTwoPoint,
         player_one_choice: this.#findUserChoice(
           round.Users,
           this.#playerOne(this.Users).id
@@ -74,8 +69,6 @@ class GameView {
       id: this.id,
       name: this.name,
       max_player: this.max,
-      player_one_score: this.playerOnePoint,
-      player_two_score: this.playerTwoPoint,
       winner: this.winner,
       isActive: this.isActive,
       created_at: this.createdAt,

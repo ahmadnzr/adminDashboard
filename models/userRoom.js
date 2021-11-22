@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "Player 1",
       },
+      playerPoint: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       isWinner: {
         type: DataTypes.BOOLEAN,
         allowNull: false,

@@ -21,8 +21,6 @@ module.exports = (sequelize, DataTypes) => {
       name: DataTypes.STRING,
       max: DataTypes.INTEGER,
       winner: DataTypes.STRING,
-      playerOnePoint: DataTypes.INTEGER,
-      playerTwoPoint: DataTypes.INTEGER,
       isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
     },
     {
