@@ -1,9 +1,19 @@
 class RoomView {
-  constructor({ id, name, max, isActive, Users, createdAt, updatedAt }) {
+  constructor({
+    id,
+    name,
+    max,
+    isActive,
+    winner,
+    Users,
+    createdAt,
+    updatedAt,
+  }) {
     this.id = id;
     this.name = name;
     this.max = max;
     this.isActive = isActive;
+    this.winner = winner;
     this.Users = Users;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -26,6 +36,7 @@ class RoomView {
       name: this.name,
       isActive: this.isActive,
       max_player: this.max,
+      winner: this.winner,
       players: this.#mapPlayer(this.Users),
     };
   }
