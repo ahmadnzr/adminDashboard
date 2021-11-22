@@ -3,33 +3,22 @@ const asyncWrapper = require("../../middleware/asyncWrapper");
 
 const getAllUser = async () => {
   const users = await User.findAll({
-    include: [{ model: Biodatas }],
-    where: { isAdmin: false },
+    include: [{ model: Biodatas, as: "biodata" }],
     order: [["updatedAt", "DESC"]],
   });
   return users;
 };
 
-const getAllUserGame = async () => {
-  const userGames = await UserGames.findAll();
-  return userGames;
-};
-
 const getUserById = async (id) => {
   const user = await User.findAll({
     where: { id },
-    include: [{ model: Biodatas }],
+    include: [{ model: Biodatas, as: "biodata" }],
   });
   return user;
 };
 
-const getTotalGamePlayedByUser = async (id) => {
-  const total = await UserGames.findAll({ where: { userId: id } });
-  return total;
-};
-
 const getLoginPage = asyncWrapper(async (req, res) => {
-  if (req.session.name) return res.redirect("/dashboard");
+  if (req.session.user_id) return res.redirect("/dashboard");
   res.render("pages/login", {
     title: "Dashboard",
     layout: "layouts/min-layout",
@@ -38,12 +27,10 @@ const getLoginPage = asyncWrapper(async (req, res) => {
 
 const getDashboardPage = asyncWrapper(async (req, res) => {
   const user = await getAllUser();
-  const userGames = await getAllUserGame();
   res.render("pages/dashboard", {
     title: "Dashboard",
     layout: "layouts/main-layout",
     tUsers: user.length,
-    tGames: userGames.length,
   });
 });
 
@@ -67,7 +54,6 @@ const getDetailUserPage = asyncWrapper(async (req, res) => {
   const { id } = req.params;
   const user = await getUserById(id);
   const total = await getTotalGamePlayedByUser(id);
-  console.log(total);
   if (user.length < 1)
     return res.status(404).json(fail(`User with id '${id}' not found!`));
 
