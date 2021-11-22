@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const dotenv = require("dotenv");
-const morgan = require('morgan')
+const morgan = require("morgan");
 dotenv.config();
 
 const PORT = process.env.PORT || 8080;
@@ -22,7 +22,7 @@ const { serverError } = require("./middleware/serverError");
 const models = require("./models");
 
 // setup
-app.use(morgan('dev'))
+app.use(morgan("dev"));
 app.use(expressLayout);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

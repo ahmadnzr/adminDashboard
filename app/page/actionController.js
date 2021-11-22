@@ -1,5 +1,6 @@
 const { User, Biodatas, UserGames } = require("../../models");
 const asyncWrapper = require("../../middleware/asyncWrapper");
+const bcrypt = require("bcrypt");
 
 const checkUser = async (id) => {
   const n = Number(id);
@@ -10,32 +11,34 @@ const checkUser = async (id) => {
   return user;
 };
 
+const checkCredentials = async (username = "", password = "") => {
+  const user = await User.findOne({
+    where: { username: username, role: "SuperAdmin" },
+  });
+  if (!user) return false;
+
+  const checkPassword = await bcrypt.compareSync(
+    password,
+    user.encryptedPassword
+  );
+  console.log(checkPassword);
+  return checkPassword ? user : false;
+};
+
 const userLogin = asyncWrapper(async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findAll({
-    where: { username, password },
-    include: [{ model: Biodatas }],
-  });
-  const isAdmin = user[0]?.isAdmin;
-  const sUname = "admin";
-  const sPass = "admin";
+  const user = await checkCredentials(username, password);
 
-  if (username === sUname && password === sPass) {
-    req.session.name = username;
-    return res.redirect("/dashboard");
-  }
+  console.log(user);
+  if (!user) return res.redirect("/user/login");
 
-  if (user.length < 1 || !isAdmin) {
-    return res.redirect("/user/login");
-  }
-
-  req.session.name = username;
+  req.session.user_id = user.id;
   return res.redirect("/dashboard");
 });
 
 const userLogout = asyncWrapper(async (req, res) => {
   req.session.destroy();
-  res.redirect("/");
+  res.redirect("/user/login");
 });
 
 const userAdd = asyncWrapper(async (req, res) => {
