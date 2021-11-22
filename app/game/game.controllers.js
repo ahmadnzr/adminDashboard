@@ -42,10 +42,13 @@ const findRoom = async (roomId, user) => {
   });
   if (!room) return NOT_FOUND_ROOM;
 
-  const user_room = room.Users.find((ur) => ur.id === user.id);
-  if (!user_room) return NOT_FOUND_USER;
+  if (!checkUserInRoom(room, user)) return NOT_FOUND_USER;
 
   return room;
+};
+
+const checkUserInRoom = (room, user) => {
+  return room.Users.find((ur) => ur.id === user.id);
 };
 
 const findRound = async (roundId) => {
@@ -147,11 +150,27 @@ const changeRoomResult = async (room) => {
   }, 0);
 
   if (user_one_point > user_two_point)
-    return await room.update({ winner: PLAYER_ONE, isActive: false });
-  if (user_one_point < user_two_point)
-    return await room.update({ winner: PLAYER_TWO, isActive: false });
+    return await room.update({
+      winner: PLAYER_ONE,
+      isActive: false,
+      playerOnePoint: user_one_point,
+      playerTwoPoint: user_two_point,
+    });
 
-  return await room.update({ winner: DRAW, isActive: false });
+  if (user_one_point < user_two_point)
+    return await room.update({
+      winner: PLAYER_TWO,
+      isActive: false,
+      playerOnePoint: user_one_point,
+      playerTwoPoint: user_two_point,
+    });
+
+  return await room.update({
+    winner: DRAW,
+    isActive: false,
+    playerOnePoint: user_one_point,
+    playerTwoPoint: user_two_point,
+  });
 };
 
 const findWinnerRound = ({ player_one_choice, player_two_choice }) => {
@@ -277,16 +296,24 @@ const fight = asyncWrapper(async (req, res) => {
 });
 
 const getRoomById = asyncWrapper(async (req, res) => {
+  const { roomId } = req.params;
   const user = req.user;
-  // const user_round = await UserRounds.findOne({
-  //   where: { userId: user.id, roundId: 1 },
-  // });
 
-  const user_round = await UserRounds.findAll({
-    where: { roundId: 1 },
-  });
+  const room = await findRoom(roomId, user);
+  if (room === NOT_FOUND_ROOM) {
+    return res
+      .status(404)
+      .json(notFound("roomId not match with any room!", "/rooms"));
+  }
+  if (room === NOT_FOUND_USER) {
+    return res
+      .status(403)
+      .json(gameError(NOT_FOUND_USER, "you are not player in room!"));
+  }
 
-  return res.status(200).json(user_round);
+  const response = new GameView(room);
+
+  return res.status(200).json(response);
 });
 
 module.exports = {

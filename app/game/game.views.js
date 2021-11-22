@@ -1,31 +1,70 @@
+const { PLAYER_ONE, PLAYER_TWO } = require("../../utils/gameChoiceConst");
+
 class GameView {
   constructor({
     id,
     name,
-    playerOnePoint,
-    playerTwoPoint,
+    max,
     winner,
     isActive,
-    Users,
+    playerOnePoint,
+    playerTwoPoint,
     createdAt,
     updatedAt,
+    Users,
+    Rounds,
   }) {
     this.id = id;
     this.name = name;
+    this.max = max;
+    this.winner = winner;
     this.playerOnePoint = playerOnePoint;
     this.playerTwoPoint = playerTwoPoint;
-    this.winner = winner;
     this.isActive = isActive;
-    this.Users = Users;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+    this.Users = Users;
+    this.Rounds = Rounds;
   }
 
-  #mapUser(users) {
+  #mapUsers(users) {
     return users.map((user) => {
       return {
+        id: user.id,
         username: user.username,
-        player_choice: user.UserRounds.playerChoice,
+        type: user.UserRooms.playerType,
+        is_winner: user.UserRooms.isWinner,
+      };
+    });
+  }
+
+  #playerOne(users) {
+    return users.find((user) => user.UserRooms.playerType === PLAYER_ONE);
+  }
+
+  #playerTwo(users) {
+    return users.find((user) => user.UserRooms.playerType === PLAYER_TWO);
+  }
+
+  #findUserChoice(users, userId) {
+    return users.find((user) => user.id === userId);
+  }
+
+  #mapRounds(rounds) {
+    return rounds.map((round) => {
+      return {
+        name: round.name,
+        winner: round.winner,
+        player_one_point: round.playerOnePoint,
+        player_two_point: round.playerTwoPoint,
+        player_one_choice: this.#findUserChoice(
+          round.Users,
+          this.#playerOne(this.Users).id
+        ).UserRounds.playerChoice,
+        player_two_choice: this.#findUserChoice(
+          round.Users,
+          this.#playerTwo(this.Users).id
+        ).UserRounds.playerChoice,
       };
     });
   }
@@ -34,11 +73,15 @@ class GameView {
     return {
       id: this.id,
       name: this.name,
-      player_one_point: this.playerOnePoint,
-      player_two_point: this.playerTwoPoint,
+      max_player: this.max,
+      player_one_score: this.playerOnePoint,
+      player_two_score: this.playerTwoPoint,
       winner: this.winner,
-      is_active: this.isActive,
-      users: this.#mapUser(this.Users),
+      isActive: this.isActive,
+      created_at: this.createdAt,
+      finished_at: this.updatedAt,
+      users: this.#mapUsers(this.Users),
+      rounds: this.#mapRounds(this.Rounds),
     };
   }
 }
