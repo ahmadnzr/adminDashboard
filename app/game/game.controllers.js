@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const asyncWrapper = require("../../middleware/asyncWrapper");
 const { User, Room, Round, UserRounds } = require("../../models");
 const {
@@ -17,13 +18,10 @@ const NOT_FOUND_ROOM = "NOT_FOUND_ROOM";
 const NOT_FOUND_USER = "NOT_FOUND_USER";
 const NOT_FOUND_CHOICE = "NOT_FOUND_CHOICE";
 const ALREADY_PLAY = "ALREADY_PLAY";
+const GAME_OVER = "GAME_OVER";
 
 const findUser = async (id) => {
   return await User.findByPk(id);
-};
-
-const findRound = async (id) => {
-  return await Round.findOne({ where: { id }, include: User });
 };
 
 const findRoom = async (roomId, user) => {
@@ -39,8 +37,58 @@ const findRoom = async (roomId, user) => {
   return room;
 };
 
+const findRound = async (roundId) => {
+  return await Round.findOne({ where: { id: roundId }, include: User });
+};
+
 const checkUserChoice = (choice) => {
   return PLAYER_CHOICE_LIST.includes(choice);
+};
+
+const alreadyPlay = async (round, userId) => {
+  return await UserRounds.findOne({
+    where: {
+      playerChoice: { [Op.ne]: "" },
+      roundId: round.id,
+      userId,
+    },
+  });
+};
+
+const submitGame = async (round, userId, choice) => {
+  return await UserRounds.update(
+    { playerChoice: choice },
+    { where: { roundId: round.id, userId } }
+  );
+};
+
+const changeRoundStatus = async (lastRound, newRound) => {
+  const userRound = await lastRound.getUsers();
+  const checkGameRound = userRound.filter(
+    (user) => user.UserRounds.playerChoice !== ""
+  );
+
+  if (checkGameRound.length > 1) {
+    await lastRound.update({ isActive: false });
+    await newRound.update({ isActive: true });
+  }
+};
+
+const generateResult = async (lastRound, room) => {
+  const userRound = await lastRound.getUsers();
+  const checkGameRound = userRound.filter(
+    (user) => user.UserRounds.playerChoice !== ""
+  );
+
+  if (checkGameRound.length > 1) {
+    await lastRound.update({ isActive: false });
+    await room.update({ isActive: false });
+    return await Room.findOne({
+      where: { id: room.id },
+    });
+  }
+
+  return false;
 };
 
 const fightingRoom = async (room, choice, user) => {
@@ -50,31 +98,29 @@ const fightingRoom = async (room, choice, user) => {
   const round_two = rounds.find((round) => round.name === ROUND_TWO);
   const round_three = rounds.find((round) => round.name === ROUND_THREE);
 
+  await changeRoundStatus(round_one, round_two);
+  await changeRoundStatus(round_two, round_three);
+
+  const results = await generateResult(round_three, room);
+  if (results) return GAME_OVER;
+
   if (round_one.isActive) {
-    // TODO : logic to play game on round 1
+    if (await alreadyPlay(round_one, user.id)) return ALREADY_PLAY;
+    await submitGame(round_one, user.id, choice);
+    return await findRound(round_one.id);
   }
 
   if (round_two.isActive) {
-    // TODO : logic to play game on round 2
+    if (await alreadyPlay(round_two, user.id)) return ALREADY_PLAY;
+    await submitGame(round_two, user.id, choice);
+    return await findRound(round_two.id);
   }
 
   if (round_three.isActive) {
-    // TODO : logic to play game on round 3
+    if (await alreadyPlay(round_three, user.id)) return ALREADY_PLAY;
+    await submitGame(round_three, user.id, choice);
+    return await findRound(round_three.id);
   }
-  // const user_round = await UserRounds.findOne({
-  //   where: { userId: user.id, roundId: round_one.id },
-  // });
-
-  // const play = await UserRounds.update(
-  //   { playerChoice: choice },
-  //   {
-  //     where: { userId: user.id, roundId: round_one.id, playerChoice: "" },
-  //   }
-  // );
-
-  // if (play < 1) return ALREADY_PLAY;
-
-  return round_one;
 };
 
 const fight = asyncWrapper(async (req, res) => {
@@ -106,7 +152,7 @@ const fight = asyncWrapper(async (req, res) => {
   }
   if (room === NOT_FOUND_USER) {
     return res
-      .status(404)
+      .status(403)
       .json(gameError(NOT_FOUND_USER, "you are not player in room!"));
   }
 
@@ -115,7 +161,23 @@ const fight = asyncWrapper(async (req, res) => {
   if (fighting === ALREADY_PLAY) {
     return res
       .status(403)
-      .json(gameError(ALREADY_PLAY, "you have played on the round"));
+      .json(
+        gameError(
+          ALREADY_PLAY,
+          "you have played on the round, please wait for player two resposne"
+        )
+      );
+  }
+
+  if (fighting === GAME_OVER) {
+    return res
+      .status(200)
+      .json(
+        gameError(
+          GAME_OVER,
+          "game is over, check results on /game/result/:roomId"
+        )
+      );
   }
 
   return res.status(200).json(fighting);

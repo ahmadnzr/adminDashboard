@@ -30,9 +30,9 @@ const findRoom = async (id) => {
 };
 
 const createRound = async (room, user) => {
-  const round1 = await Round.create({ name: ROUND_ONE });
-  const round2 = await Round.create({ name: ROUND_TWO });
-  const round3 = await Round.create({ name: ROUND_THREE });
+  const round1 = await Round.create({ name: ROUND_ONE, isActive: true });
+  const round2 = await Round.create({ name: ROUND_TWO, isActive: false });
+  const round3 = await Round.create({ name: ROUND_THREE, isActive: false });
 
   await round1.addUser(user, { through: { playerChoice: "" } });
   await round2.addUser(user, { through: { playerChoice: "" } });
@@ -53,7 +53,7 @@ const createRoom = async (body, userId) => {
   const { name } = body;
   const user = await findUser(userId);
 
-  const room = await Room.create({ name, max: 2, status: "Active" });
+  const room = await Room.create({ name, max: 2, isActive: true });
   await room.addUser(user, { through: { playerType: PLAYER_ONE } });
   await createRound(room, user);
   return room;
@@ -61,9 +61,9 @@ const createRoom = async (body, userId) => {
 
 const checkRoom = async (roomId, player) => {
   const room = await findRoom(roomId);
-  const user_room = room.Users;
-
   if (!room) return UNDEFINED_ROOM;
+
+  const user_room = room.Users;
 
   const already = user_room.find((user) => user.id === player.id);
   if (already) return ALREADY_USER;
