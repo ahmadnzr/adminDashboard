@@ -23,7 +23,10 @@ const {
   fieldRequired,
   gameError,
 } = require("../../utils/responseBuilder");
+const FightView = require("./fight.views");
 const GameView = require("./game.views");
+const RoundView = require("./round.view");
+const UserHistoryView = require("./userHistory.views");
 
 const NOT_FOUND_ROOM = "NOT_FOUND_ROOM";
 const NOT_FOUND_USER = "NOT_FOUND_USER";
@@ -53,6 +56,10 @@ const checkUserInRoom = (room, user) => {
 
 const findRound = async (roundId) => {
   return await Round.findOne({ where: { id: roundId }, include: User });
+};
+
+const findRoundByRoomId = async (roomId, name) => {
+  return await Round.findOne({ where: { roomId, name }, include: User });
 };
 
 const checkUserChoice = (choice) => {
@@ -149,28 +156,36 @@ const changeRoomResult = async (room) => {
     return points + cPoint.playerTwoPoint;
   }, 0);
 
-  if (user_one_point > user_two_point)
-    return await room.update({
+  if (user_one_point > user_two_point) {
+    await room.update({
       winner: PLAYER_ONE,
       isActive: false,
-      playerOnePoint: user_one_point,
-      playerTwoPoint: user_two_point,
     });
+    return await UserRooms.update(
+      { isWinner: true, playerPoint: user_one_point },
+      { where: { playerType: PLAYER_ONE, roomId: room.id } }
+    );
+  }
 
-  if (user_one_point < user_two_point)
-    return await room.update({
+  if (user_one_point < user_two_point) {
+    await room.update({
       winner: PLAYER_TWO,
       isActive: false,
-      playerOnePoint: user_one_point,
-      playerTwoPoint: user_two_point,
     });
+    return await UserRooms.update(
+      { isWinner: true, playerPoint: user_two_point },
+      { where: { playerType: PLAYER_ONE, roomId: room.id } }
+    );
+  }
 
-  return await room.update({
+  await room.update({
     winner: DRAW,
     isActive: false,
-    playerOnePoint: user_one_point,
-    playerTwoPoint: user_two_point,
   });
+  return await UserRooms.update(
+    { playerPoint: user_two_point },
+    { where: { roomId: room.id } }
+  );
 };
 
 const findWinnerRound = ({ player_one_choice, player_two_choice }) => {
@@ -292,7 +307,9 @@ const fight = asyncWrapper(async (req, res) => {
       );
   }
 
-  return res.status(200).json(fighting);
+  const response = new FightView(fighting);
+
+  return res.status(200).json(response);
 });
 
 const getRoomById = asyncWrapper(async (req, res) => {
@@ -300,6 +317,7 @@ const getRoomById = asyncWrapper(async (req, res) => {
   const user = req.user;
 
   const room = await findRoom(roomId, user);
+
   if (room === NOT_FOUND_ROOM) {
     return res
       .status(404)
@@ -316,7 +334,55 @@ const getRoomById = asyncWrapper(async (req, res) => {
   return res.status(200).json(response);
 });
 
+const gameRound = asyncWrapper(async (req, res) => {
+  const { roomId } = req.params;
+  const user = req.user;
+
+  const url = req.url.split("/")[4];
+  let name;
+
+  switch (url) {
+    case "round-one":
+      name = ROUND_ONE;
+      break;
+    case "round-two":
+      name = ROUND_TWO;
+      break;
+    case "round-three":
+      name = ROUND_THREE;
+      break;
+    default:
+      break;
+  }
+
+  const room = await findRoom(roomId, user);
+  if (room === NOT_FOUND_ROOM) {
+    return res
+      .status(404)
+      .json(notFound("roomId not match with any room!", "/rooms"));
+  }
+  if (room === NOT_FOUND_USER) {
+    return res
+      .status(403)
+      .json(gameError(NOT_FOUND_USER, "you are not player in room!"));
+  }
+  const response = new RoundView(await findRoundByRoomId(roomId, name));
+  return res.status(200).json(response);
+});
+
+const gameUserHistory = asyncWrapper(async (req, res) => {
+  const user = await User.findOne({
+    where: { id: req.user.id },
+    include: [{ model: Room }],
+  });
+
+  const response = new UserHistoryView(user);
+
+  return res.status(200).json(response);
+});
 module.exports = {
   fight,
   getRoomById,
+  gameRound,
+  gameUserHistory,
 };
