@@ -13,6 +13,14 @@ const ROUND_THREE = "ROUND_THREE";
 
 const WAITING_PLAYER_TWO = "WAITING_PLAYER_TWO";
 
+const DRAW = "DRAW";
+const PLAYER_ONE_WIN = "PLAYER_ONE_WIN";
+const PLAYER_TWO_WIN = "PLAYER_TWO_WIN";
+
+const DRAW_POINT = 50;
+const WINNER_POINT = 100;
+const LOST_POINT = 0;
+
 module.exports = {
   GUNTING,
   BATU,
@@ -24,4 +32,10 @@ module.exports = {
   ROUND_TWO,
   ROUND_THREE,
   WAITING_PLAYER_TWO,
+  DRAW,
+  PLAYER_TWO_WIN,
+  PLAYER_ONE_WIN,
+  DRAW_POINT,
+  WINNER_POINT,
+  LOST_POINT,
 };

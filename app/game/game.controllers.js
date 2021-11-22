@@ -1,11 +1,22 @@
 const { Op } = require("sequelize");
 const asyncWrapper = require("../../middleware/asyncWrapper");
-const { User, Room, Round, UserRounds } = require("../../models");
+const { User, Room, Round, UserRounds, UserRooms } = require("../../models");
 const {
   PLAYER_CHOICE_LIST,
   ROUND_ONE,
   ROUND_TWO,
   ROUND_THREE,
+  PLAYER_ONE,
+  PLAYER_TWO,
+  KERTAS,
+  DRAW,
+  BATU,
+  PLAYER_TWO_WIN,
+  PLAYER_ONE_WIN,
+  GUNTING,
+  DRAW_POINT,
+  WINNER_POINT,
+  LOST_POINT,
 } = require("../../utils/gameChoiceConst");
 const {
   notFound,
@@ -69,9 +80,91 @@ const changeRoundStatus = async (lastRound, newRound) => {
   );
 
   if (checkGameRound.length > 1) {
-    await lastRound.update({ isActive: false });
+    await changeRoundResult(lastRound);
     await newRound.update({ isActive: true });
   }
+};
+
+const changeRoundResult = async (lastRound) => {
+  const users_round = await lastRound.getUsers();
+  const users_room = await UserRooms.findAll({
+    where: { roomId: lastRound.roomId },
+  });
+
+  const player_one_room = users_room.find(
+    (user) => user.playerType === PLAYER_ONE
+  );
+  const player_two_room = users_room.find(
+    (user) => user.playerType === PLAYER_TWO
+  );
+
+  const player_one_round = users_round.find(
+    (user) => user.id === player_one_room.userId
+  );
+  const player_two_round = users_round.find(
+    (user) => user.id === player_two_room.userId
+  );
+
+  const player_one_choice = player_one_round.UserRounds.playerChoice;
+  const player_two_choice = player_two_round.UserRounds.playerChoice;
+
+  const result = findWinnerRound({ player_one_choice, player_two_choice });
+
+  switch (result) {
+    case DRAW:
+      return await lastRound.update({
+        playerOnePoint: DRAW_POINT,
+        playerTwoPoint: DRAW_POINT,
+        winner: DRAW,
+        isActive: false,
+      });
+    case PLAYER_ONE_WIN:
+      return await lastRound.update({
+        playerOnePoint: WINNER_POINT,
+        playerTwoPoint: LOST_POINT,
+        winner: PLAYER_ONE,
+        isActive: false,
+      });
+    case PLAYER_TWO_WIN:
+      return await lastRound.update({
+        playerOnePoint: LOST_POINT,
+        playerTwoPoint: WINNER_POINT,
+        winner: PLAYER_TWO,
+        isActive: false,
+      });
+  }
+};
+
+const changeRoomResult = async (room) => {
+  const rounds = await room.getRounds();
+
+  const user_one_point = rounds.reduce((points, cPoint) => {
+    return points + cPoint.playerOnePoint;
+  }, 0);
+
+  const user_two_point = rounds.reduce((points, cPoint) => {
+    return points + cPoint.playerTwoPoint;
+  }, 0);
+
+  if (user_one_point > user_two_point)
+    return await room.update({ winner: PLAYER_ONE, isActive: false });
+  if (user_one_point < user_two_point)
+    return await room.update({ winner: PLAYER_TWO, isActive: false });
+
+  return await room.update({ winner: DRAW, isActive: false });
+};
+
+const findWinnerRound = ({ player_one_choice, player_two_choice }) => {
+  if (player_one_choice === player_two_choice) return DRAW;
+
+  if (player_one_choice === BATU)
+    return player_two_choice === KERTAS ? PLAYER_TWO_WIN : PLAYER_ONE_WIN;
+
+  if (player_one_choice === KERTAS)
+    return player_two_choice === GUNTING ? PLAYER_TWO_WIN : PLAYER_ONE_WIN;
+
+  if (player_one_choice === GUNTING)
+    return player_two_choice === BATU ? PLAYER_TWO_WIN : PLAYER_ONE_WIN;
 };
 
 const generateResult = async (lastRound, room) => {
@@ -81,8 +174,8 @@ const generateResult = async (lastRound, room) => {
   );
 
   if (checkGameRound.length > 1) {
-    await lastRound.update({ isActive: false });
-    await room.update({ isActive: false });
+    await changeRoundResult(lastRound);
+    await changeRoomResult(room);
     return await Room.findOne({
       where: { id: room.id },
     });

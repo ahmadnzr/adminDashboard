@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       max: DataTypes.INTEGER,
+      winner: DataTypes.STRING,
       isActive: { type: DataTypes.BOOLEAN, defaultValue: true },
     },
     {
